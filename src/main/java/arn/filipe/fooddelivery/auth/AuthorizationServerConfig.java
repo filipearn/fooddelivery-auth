@@ -3,6 +3,7 @@ package arn.filipe.fooddelivery.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import java.util.Arrays;
@@ -32,6 +34,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtKeyStoreProperties jwtKeyStoreProperties;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -69,14 +74,26 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public JwtAccessTokenConverter jwtAccessTokenConverter(){
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
 
-        jwtAccessTokenConverter.setSigningKey("1928371ASKDLAMSDOAISJDIUSHDNIAUSDHAISUH129391293");
+        //SYMMETRIC SIGN
+        //jwtAccessTokenConverter.setSigningKey("1928371ASKDLAMSDOAISJDIUSHDNIAUSDHAISUH129391293");
+
+        //To use jwt asymmetric sign with jks
+        var jksResource = new ClassPathResource(jwtKeyStoreProperties.getPath());
+//        var keyStorePass = "123456";
+//        var keyPairAlias = "fooddelivery";
+
+        var keyStoreKeyFactory = new KeyStoreKeyFactory(jksResource, jwtKeyStoreProperties.getPassword().toCharArray());
+        var keyPair = keyStoreKeyFactory.getKeyPair(jwtKeyStoreProperties.getKeypairAlias());
+
+        jwtAccessTokenConverter.setKeyPair(keyPair);
 
         return jwtAccessTokenConverter;
     }
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         //security.checkTokenAccess("isAuthenticated()");
-        security.checkTokenAccess("permitAll()");
+        security.checkTokenAccess("permitAll()")
+                .tokenKeyAccess("permitAll()");
     }
 
     @Override
