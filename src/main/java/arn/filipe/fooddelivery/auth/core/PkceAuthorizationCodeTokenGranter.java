@@ -1,4 +1,4 @@
-package arn.filipe.fooddelivery.auth;
+package arn.filipe.fooddelivery.auth.core;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

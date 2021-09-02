@@ -1,4 +1,4 @@
-package arn.filipe.fooddelivery.auth;
+package arn.filipe.fooddelivery.auth.core;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
