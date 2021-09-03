@@ -46,7 +46,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .withClient("fooddelivery-web")
                     .secret(passwordEncoder.encode("web123"))
                     .authorizedGrantTypes("password", "refresh_token")
-                    .scopes("write", "read")
+                    .scopes("WRITE", "READ")
                     .accessTokenValiditySeconds(60*60*6) //6 hrs
                     .refreshTokenValiditySeconds(60*60*24*7) //7 days
 
@@ -54,14 +54,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .withClient("revenues")
                     .secret(passwordEncoder.encode("faturamento123"))
                     .authorizedGrantTypes("client_credentials")
-                    .scopes("write", "read")
+                    .scopes("WRITE", "READ")
 
 
                 .and()
                     .withClient("foodanalytics")
                     .secret(passwordEncoder.encode("food123"))
                     .authorizedGrantTypes("authorization_code")
-                    .scopes("write", "read")
+                    .scopes("WRITE", "READ")
                     .redirectUris("http://application-client")
 
                 .and()
