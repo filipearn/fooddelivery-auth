@@ -1,18 +1,17 @@
 package arn.filipe.fooddelivery.auth.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data
-public class User {
+public class Team {
 
     @EqualsAndHashCode.Include
     @Id
@@ -22,17 +21,11 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
+    @JsonIgnore
     @ManyToMany
-    @JoinTable(name = "user_team",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id"))
-    private Set<Team> teams = new HashSet<>();
+    @JoinTable(name = "team_permission",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private Set<Permission> permissions = new HashSet<>();
 
-
-}
+    }
